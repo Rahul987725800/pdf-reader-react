@@ -1,0 +1,43 @@
+.container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.header {
+  flex-basis: 10%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+}
+
+.body {
+  flex-basis: 90%;
+  display: flex;
+  flex-direction: column;
+}
+
+.input {
+  flex-basis: 85%;
+}
+.input textarea {
+  padding: 10px;
+  background-color: hsl(45, 100%, 95%);
+  width: 100%;
+  height: 100%;
+  font-family: inherit;
+  font-size: 1rem;
+  outline: none;
+  border: none;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+  resize: none;
+}
+.buttons {
+  flex-basis: 15%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px;
+}

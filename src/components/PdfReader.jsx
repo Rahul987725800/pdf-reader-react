@@ -68,13 +68,15 @@ export default function PdfReader({ pageNumber, setPageNumber }) {
           }}
         ></input>
       </div>
-      <Document file={book} onLoadSuccess={onDocumentLoadSuccess}>
-        <Page
-          scale={scale}
-          pageNumber={pageNumber}
-          onLoadSuccess={removeTextLayerOffset}
-        />
-      </Document>
+      <div className="non-draggable">
+        <Document file={book} onLoadSuccess={onDocumentLoadSuccess}>
+          <Page
+            scale={scale}
+            pageNumber={pageNumber}
+            onLoadSuccess={removeTextLayerOffset}
+          />
+        </Document>
+      </div>
     </div>
   );
 }

@@ -3,6 +3,12 @@ import { Debounce, getDicUrl } from '../utils';
 import lodash from 'lodash';
 import styles from './Dictionary.module.css';
 function Dictionary() {
+  const setSelection = useRef(
+    new Debounce(() => {
+      // console.log('called');
+      setWord(document.getSelection().toString());
+    }, 1000)
+  );
   const fetchWord = useRef(
     new Debounce((word) => {
       fetch(getDicUrl(word))
@@ -38,8 +44,7 @@ function Dictionary() {
   useEffect(() => {
     document.onselectionchange = () => {
       if (document.getSelection().toString()) {
-        console.log('called');
-        setWord(document.getSelection().toString());
+        setSelection.current.call();
       }
     };
   }, []);
@@ -120,25 +125,27 @@ function Dictionary() {
     }
   };
   return (
-    <div>
-      dictionary
-      <div>
-        <div>
-          <div className={styles.wordInput}>
-            <label>Word: </label>
-            <button
-              onClick={() => {
-                if (word)
-                  window.open(
-                    `https://www.google.com/search?q=meaning+of+${word}&rlz=1C1CHBF_enIN863IN863&oq=meaning+of+rigr&aqs=chrome.1.69i57j0l7.22150j1j7&sourceid=chrome&ie=UTF-8`,
-                    '_blank'
-                  );
-              }}
-            >
-              Search on web
-            </button>
+    <div className={styles.container}>
+      <div className={styles.upper}>
+        <div className={styles.header}>
+          <p>Dictionary</p>
+          <button
+            className="info"
+            onClick={() => {
+              if (word)
+                window.open(
+                  `https://www.google.com/search?q=meaning+of+${word}&rlz=1C1CHBF_enIN863IN863&oq=meaning+of+rigr&aqs=chrome.1.69i57j0l7.22150j1j7&sourceid=chrome&ie=UTF-8`,
+                  '_blank'
+                );
+            }}
+            disabled={word.length === 0}
+          >
+            <i class="fa fa-search" aria-hidden="true"></i> Search Web
+          </button>
+        </div>
+        <div className={styles.userInput + ' non-draggable'}>
+          <div>
             <div className={styles.inputBox}>
-              <span onClick={() => setWord('')}>X</span>
               <input
                 onChange={(e) => setWord(e.target.value)}
                 value={word}
@@ -154,6 +161,7 @@ function Dictionary() {
                   setShowSuggestedWords(true);
                 }}
               ></input>
+              <p onClick={() => setWord('')}>&#10005;</p>
             </div>
           </div>
           {showSuggestedWords && suggestedWords.length > 0 && (
@@ -176,14 +184,11 @@ function Dictionary() {
             </div>
           )}
         </div>
-        <div>
-          <ul>
-            Meanings
-            {meanings.map((mean, i) => (
-              <li key={mean + i}>{mean}</li>
-            ))}
-          </ul>
-        </div>
+      </div>
+
+      <div className={styles.lower + ' non-draggable scrollBar'}>
+        {suggestedWords.length === 0 &&
+          meanings.map((mean, i) => <p key={mean + i}>{mean}</p>)}
       </div>
     </div>
   );
