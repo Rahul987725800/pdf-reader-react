@@ -1,0 +1,9 @@
+.container {
+  display: flex;
+}
+.reader {
+  flex: 5;
+}
+.notes {
+  flex: 2;
+}
