@@ -19,3 +19,11 @@ export const firebaseUrl =
 export const percent = (val, percent) => {
   return (val * percent) / 100;
 };
+export const returnDiffentFalsyValue = (val) => {
+  let falsyValues = ['', 0, null, undefined];
+  for (let v of falsyValues) {
+    if (v !== val) {
+      return v;
+    }
+  }
+};

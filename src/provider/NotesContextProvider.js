@@ -1,14 +1,19 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { Debounce, firebaseUrl } from '../utils';
+import { useLogin } from './LoginContextProvider';
+import { usePdf } from './PdfContextProvider';
 const NotesContext = React.createContext();
 
 export const useNotes = () => {
   return useContext(NotesContext);
 };
 export const NotesProvider = ({ children }) => {
+  const { fileName } = usePdf();
+  const { loginState } = useLogin();
   const [pageToData, setPageToData] = useState({});
   const [saving, setSaving] = useState(false);
-  const postNote = (pageNumber, pageToData) => {
+
+  const postNote = (pageNumber, pageToData, fileName, loginState) => {
     // console.log('called with page num ' + pageNumber);
     // console.log(pageToData);
     // return;
@@ -16,7 +21,7 @@ export const NotesProvider = ({ children }) => {
     let url;
     let method;
     if (pageToData[pageNumber].key) {
-      url = firebaseUrl + 'notes/' + pageToData[pageNumber].key + '.json';
+      url = `${firebaseUrl}users/${loginState.userId}/books/${fileName}/notes/${pageToData[pageNumber].key}.json`;
       method = 'PATCH';
       return fetch(url, {
         method,
@@ -37,7 +42,8 @@ export const NotesProvider = ({ children }) => {
           setSaving(false);
         });
     } else {
-      url = firebaseUrl + 'notes.json/';
+      // console.log(loginState.userId);
+      url = `${firebaseUrl}users/${loginState.userId}/books/${fileName}/notes.json`;
       method = 'POST';
       return fetch(url, {
         method,
@@ -71,7 +77,7 @@ export const NotesProvider = ({ children }) => {
     let url;
     let method;
     if (pageToData[pageNumber].key) {
-      url = firebaseUrl + 'notes/' + pageToData[pageNumber].key + '.json';
+      url = `${firebaseUrl}users/${loginState.userId}/books/${fileName}/notes/${pageToData[pageNumber].key}.json`;
       method = 'DELETE';
       return fetch(url, {
         method,
@@ -99,7 +105,9 @@ export const NotesProvider = ({ children }) => {
 
   const fetchData = () => {
     console.log('fetching data');
-    fetch(firebaseUrl + 'notes.json')
+    fetch(
+      `${firebaseUrl}users/${loginState.userId}/books/${fileName}/notes.json`
+    )
       .then((res) => res.json())
       .then((data) => {
         // console.log(data);
@@ -110,21 +118,22 @@ export const NotesProvider = ({ children }) => {
             pageToD[data[key].pageNumber] = {
               key,
               content: data[key].content,
-              update: new Debounce((pageToData) => {
-                postNote(pnum, pageToData);
+              update: new Debounce((pageToData, fileName, loginState) => {
+                postNote(pnum, pageToData, fileName, loginState);
               }, 1000),
             };
           });
           setPageToData(pageToD);
         }
       })
-      .then((err) => console.log(err));
+      .catch((err) => console.log(err));
   };
-  useEffect(() => {
-    fetchData();
-  }, []);
+
   const deleteAllNotes = () => {
-    fetch(firebaseUrl + 'notes.json', { method: 'DELETE' })
+    fetch(
+      `${firebaseUrl}users/${loginState.userId}/books/${fileName}/notes.json`,
+      { method: 'DELETE' }
+    )
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
@@ -138,7 +147,7 @@ export const NotesProvider = ({ children }) => {
       page.content = value;
       const uptd = { ...ptd };
       uptd[pageNum] = page;
-      page.update.call(uptd);
+      page.update.call(uptd, fileName, loginState);
       return uptd;
     });
   };
@@ -148,13 +157,16 @@ export const NotesProvider = ({ children }) => {
       uptd[pageNum] = {
         key: '',
         content: '',
-        update: new Debounce((pageToData) => {
-          postNote(pageNum, pageToData);
+        update: new Debounce((pageToData, fileName, loginState) => {
+          postNote(pageNum, pageToData, fileName, loginState);
         }, 1000),
       };
       return uptd;
     });
   };
+  useEffect(() => {
+    fetchData();
+  }, []);
   const exportedValues = {
     pageToData,
     setPageToData,

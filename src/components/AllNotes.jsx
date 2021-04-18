@@ -15,7 +15,7 @@ function AllNotes() {
   return (
     <div className={styles.container}>
       <div>
-        <Link to="/">
+        <Link to="/pdf">
           <i className="fa fa-arrow-left"></i>&nbsp;&nbsp;Go Back
         </Link>
         {saving && <p className={styles.saving}>Saving Changes ...</p>}

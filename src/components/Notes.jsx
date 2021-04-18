@@ -1,8 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useNotes } from '../provider/NotesContextProvider';
+import { usePdf } from '../provider/PdfContextProvider';
 import styles from './Notes.module.css';
-function Notes({ pageNum, setLayout }) {
+function Notes() {
   const {
     saving,
     pageToData,
@@ -10,11 +11,12 @@ function Notes({ pageNum, setLayout }) {
     changedPageContent,
     addNewPage,
   } = useNotes();
+  const { pageNumber, setLayout } = usePdf();
   const getValue = () => {
-    if (pageToData[pageNum]) {
-      return pageToData[pageNum].content;
+    if (pageToData[pageNumber]) {
+      return pageToData[pageNumber].content;
     } else {
-      addNewPage(pageNum);
+      addNewPage(pageNumber);
     }
   };
   return (
@@ -58,18 +60,18 @@ function Notes({ pageNum, setLayout }) {
           <textarea
             value={getValue()}
             onChange={(e) => {
-              changedPageContent(pageNum, e.target.value);
+              changedPageContent(pageNumber, e.target.value);
             }}
           ></textarea>
         </div>
         <div className={styles.buttons}>
-          <Link to="/all-notes">All Notes</Link>
+          <Link to="/notes">All Notes</Link>
           {saving ? <p>Saving...</p> : <p></p>}
 
           <button
             className="danger"
             onClick={() => {
-              deleteNote(pageNum);
+              deleteNote(pageNumber);
             }}
           >
             Clear

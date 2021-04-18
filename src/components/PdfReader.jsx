@@ -1,19 +1,28 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Document, Page } from 'react-pdf/dist/umd/entry.webpack';
 import styles from './PdfReader.module.css';
-import { initialLayout } from './Grid';
 
-export default function PdfReader({ pageNumber, setPageNumber, setLayout }) {
+import { usePdf } from '../provider/PdfContextProvider';
+
+export default function PdfReader() {
   const fileInputRef = useRef();
-  const [numPages, setNumPages] = useState(null);
-
-  const [scale, setScale] = useState(1.4);
-  const [fileName, setFileName] = useState('No PDF Selected');
-  const [pdfFile, setPdfFile] = useState(null);
+  const {
+    fileName,
+    setFileName,
+    pdfFile,
+    setPdfFile,
+    scale,
+    setScale,
+    numPages,
+    setNumPages,
+    pageNumber,
+    setPageNumber,
+    setLayout,
+    initialLayout,
+  } = usePdf();
 
   function onDocumentLoadSuccess({ numPages }) {
     setNumPages(numPages);
-    setPageNumber(1);
   }
 
   function changePage(offset) {
