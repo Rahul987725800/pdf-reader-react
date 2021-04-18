@@ -15,7 +15,7 @@ export const LoginProvider = ({ children }) => {
     checkingUser: false,
   });
   let authSuccess = (token, userId) => {
-    console.log(userId);
+    // console.log(userId);
     setLoginState((ps) => ({
       ...ps,
       token,

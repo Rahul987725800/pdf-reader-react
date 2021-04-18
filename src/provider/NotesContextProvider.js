@@ -8,6 +8,7 @@ export const useNotes = () => {
   return useContext(NotesContext);
 };
 export const NotesProvider = ({ children }) => {
+  const { pdfFile } = usePdf();
   const { fileName } = usePdf();
   const { loginState } = useLogin();
   const [pageToData, setPageToData] = useState({});
@@ -20,91 +21,50 @@ export const NotesProvider = ({ children }) => {
     setSaving(true);
     let url;
     let method;
-    if (pageToData[pageNumber].key) {
-      url = `${firebaseUrl}users/${loginState.userId}/books/${fileName}/notes/${pageToData[pageNumber].key}.json`;
-      method = 'PATCH';
-      return fetch(url, {
-        method,
-        headers: {
-          'content-type': 'application/json',
-        },
-        body: JSON.stringify({
-          content: pageToData[pageNumber].content,
-        }),
+
+    url = `${firebaseUrl}users/${loginState.userId}/books/${fileName}/notes/${pageNumber}.json`;
+    method = 'PUT';
+    return fetch(url, {
+      method,
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        content: pageToData[pageNumber].content,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        // console.log(data);
+        setSaving(false);
       })
-        .then((res) => res.json())
-        .then((data) => {
-          // console.log(data);
-          setSaving(false);
-        })
-        .catch((err) => {
-          console.log(err);
-          setSaving(false);
-        });
-    } else {
-      // console.log(loginState.userId);
-      url = `${firebaseUrl}users/${loginState.userId}/books/${fileName}/notes.json`;
-      method = 'POST';
-      return fetch(url, {
-        method,
-        headers: {
-          'content-type': 'application/json',
-        },
-        body: JSON.stringify({
-          pageNumber,
-          content: pageToData[pageNumber].content,
-        }),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          // console.log(data);
-          setPageToData((ptd) => {
-            const page = { ...ptd[pageNumber] };
-            page.key = data.name;
-            const uptd = { ...ptd };
-            uptd[pageNumber] = page;
-            return uptd;
-          });
-          setSaving(false);
-        })
-        .catch((err) => {
-          console.log(err);
-          setSaving(false);
-        });
-    }
+      .catch((err) => {
+        console.log(err);
+        setSaving(false);
+      });
   };
   const deleteNote = (pageNumber) => {
-    let url;
-    let method;
-    if (pageToData[pageNumber].key) {
-      url = `${firebaseUrl}users/${loginState.userId}/books/${fileName}/notes/${pageToData[pageNumber].key}.json`;
-      method = 'DELETE';
-      return fetch(url, {
-        method,
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          // console.log(data);
-          setPageToData((ptd) => {
-            const uptd = { ...ptd };
-            delete uptd[pageNumber];
-            return uptd;
-          });
-        })
-        .catch((err) => {
-          console.log(err);
+    let url = `${firebaseUrl}users/${loginState.userId}/books/${fileName}/notes/${pageNumber}.json`;
+    let method = 'DELETE';
+    return fetch(url, {
+      method,
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        // console.log(data);
+        setPageToData((ptd) => {
+          const uptd = { ...ptd };
+          delete uptd[pageNumber];
+          return uptd;
         });
-    } else {
-      setPageToData((ptd) => {
-        const uptd = { ...ptd };
-        delete uptd[pageNumber];
-        return uptd;
+      })
+      .catch((err) => {
+        console.log(err);
       });
-    }
   };
 
   const fetchData = () => {
-    console.log('fetching data');
+    // console.log('fetching data');
     fetch(
       `${firebaseUrl}users/${loginState.userId}/books/${fileName}/notes.json`
     )
@@ -113,16 +73,20 @@ export const NotesProvider = ({ children }) => {
         // console.log(data);
         if (data) {
           const pageToD = {};
-          Object.keys(data).forEach((key) => {
-            let pnum = data[key].pageNumber;
-            pageToD[data[key].pageNumber] = {
-              key,
-              content: data[key].content,
-              update: new Debounce((pageToData, fileName, loginState) => {
-                postNote(pnum, pageToData, fileName, loginState);
-              }, 1000),
-            };
-          });
+          for (let page in data) {
+            const obj = data[page];
+            if (obj) {
+              const content = obj.content;
+              // console.log(page);
+              // console.log(content);
+              pageToD[page] = {
+                content,
+                update: new Debounce((pageToData, fileName, loginState) => {
+                  postNote(page, pageToData, fileName, loginState);
+                }, 1000),
+              };
+            }
+          }
           setPageToData(pageToD);
         }
       })
@@ -136,7 +100,7 @@ export const NotesProvider = ({ children }) => {
     )
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         setPageToData({});
       })
       .then((err) => console.log(err));
@@ -155,7 +119,6 @@ export const NotesProvider = ({ children }) => {
     setPageToData((ptd) => {
       const uptd = { ...ptd };
       uptd[pageNum] = {
-        key: '',
         content: '',
         update: new Debounce((pageToData, fileName, loginState) => {
           postNote(pageNum, pageToData, fileName, loginState);
@@ -166,7 +129,7 @@ export const NotesProvider = ({ children }) => {
   };
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [pdfFile]);
   const exportedValues = {
     pageToData,
     setPageToData,

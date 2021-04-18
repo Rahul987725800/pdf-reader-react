@@ -38,7 +38,7 @@ function AllNotes() {
       </div>
       <div className={styles.notesGrid}>
         {Object.keys(pageToData).map((pageNum) => {
-          return (
+          return pageToData[pageNum].content ? (
             <div key={pageNum} className={styles.note}>
               <div className={styles.page}>
                 <i
@@ -70,7 +70,7 @@ function AllNotes() {
                 }}
               ></textarea>
             </div>
-          );
+          ) : null;
         })}
       </div>
     </div>
