@@ -20,10 +20,11 @@ body {
 .react-pdf__Document {
   line-height: initial;
 }
-.link {
+a {
   color: #337ab7;
+  text-decoration: none;
 }
-.link:hover {
+a:hover {
   color: #00313d;
   cursor: pointer;
 }
@@ -53,7 +54,8 @@ button.danger {
 }
 /* Let's get this party started */
 .scrollBar::-webkit-scrollbar {
-  width: 10px;
+  display: block;
+  width: 12px;
 }
 
 /* Track */
@@ -67,6 +69,6 @@ button.danger {
 .scrollBar::-webkit-scrollbar-thumb {
   border-radius: 10px;
   border-radius: 10px;
-  background: rgba(245, 255, 0, 0.637);
+  background: rgba(219, 253, 255, 0.637);
   box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
 }

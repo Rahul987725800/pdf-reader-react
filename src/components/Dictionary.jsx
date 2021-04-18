@@ -132,15 +132,23 @@ function Dictionary() {
           <button
             className="info"
             onClick={() => {
-              if (word)
-                window.open(
-                  `https://www.google.com/search?q=meaning+of+${word}&rlz=1C1CHBF_enIN863IN863&oq=meaning+of+rigr&aqs=chrome.1.69i57j0l7.22150j1j7&sourceid=chrome&ie=UTF-8`,
-                  '_blank'
-                );
+              if (word) {
+                if (word.length < 20) {
+                  window.open(
+                    `https://www.google.com/search?q=meaning+of+${word}&rlz=1C1CHBF_enIN863IN863&oq=meaning+of+rigr&aqs=chrome.1.69i57j0l7.22150j1j7&sourceid=chrome&ie=UTF-8`,
+                    '_blank'
+                  );
+                } else {
+                  window.open(
+                    `https://www.google.com/search?q=${word}&rlz=1C1CHBF_enIN863IN863&oq=meaning+of+rigr&aqs=chrome.1.69i57j0l7.22150j1j7&sourceid=chrome&ie=UTF-8`,
+                    '_blank'
+                  );
+                }
+              }
             }}
             disabled={word.length === 0}
           >
-            <i class="fa fa-search" aria-hidden="true"></i> Search Web
+            <i className="fa fa-search" aria-hidden="true"></i> Search Web
           </button>
         </div>
         <div className={styles.userInput + ' non-draggable'}>

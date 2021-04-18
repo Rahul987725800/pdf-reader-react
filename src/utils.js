@@ -16,3 +16,6 @@ export const getDicUrl = (word) => {
 };
 export const firebaseUrl =
   'https://pdfreader-93a01-default-rtdb.firebaseio.com/';
+export const percent = (val, percent) => {
+  return (val * percent) / 100;
+};

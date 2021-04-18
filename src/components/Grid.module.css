@@ -1,0 +1,10 @@
+.block {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  border: 1px solid black;
+  border-radius: 2px;
+}
+.noScrollBar::-webkit-scrollbar {
+  display: none;
+}

@@ -1,0 +1,80 @@
+.container {
+  height: 100%;
+}
+.navBar {
+  background-color: rgb(78, 78, 78);
+  color: white;
+  font-weight: 500;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 10;
+  height: 6rem;
+}
+.header {
+  text-align: center;
+  border-bottom: 1px solid white;
+  padding: 10px;
+  position: relative;
+  height: 3rem;
+}
+.resetLayout {
+  position: absolute;
+  right: 10px;
+}
+.controls {
+  display: flex;
+  height: 3rem;
+  padding: 10px;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.pageInput {
+  width: 3rem;
+  background-color: rgb(46, 46, 46);
+  color: white;
+  text-align: center;
+  padding: 5px;
+  outline: none;
+}
+.fileDropInput {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+}
+.documentContainer {
+  z-index: 1;
+  padding-top: 6rem;
+}
+.documentUpperPart {
+  margin-top: 0;
+  display: flex;
+  justify-content: center;
+}
+.arrow {
+  position: absolute;
+  top: 0;
+  color: rgb(255, 255, 255);
+  background-color: rgba(128, 128, 128, 0.295);
+  min-height: 100%;
+  z-index: 5;
+  display: flex;
+  justify-content: center;
+}
+.arrow:hover {
+  color: rgba(61, 61, 61, 0.295);
+}
+.arrow i {
+  position: fixed;
+  top: 50%;
+  font-size: 1.5rem;
+}
+.prevArrow {
+  left: 0;
+}
+.nextArrow {
+  right: 2%;
+}

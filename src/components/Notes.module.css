@@ -41,3 +41,10 @@
   justify-content: space-between;
   padding: 0 10px;
 }
+.expandIcon {
+  font-size: 1.2rem;
+}
+.expandIcon:hover {
+  color: rgb(0, 131, 50);
+  cursor: pointer;
+}

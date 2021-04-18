@@ -6,7 +6,6 @@
 .upper {
   position: absolute;
   top: 0;
-  height: 30%;
   width: 100%;
 }
 .header {
@@ -93,7 +92,7 @@ p.active {
 }
 .lower {
   position: absolute;
-  top: 30%;
+  bottom: 0;
   width: 100%;
   max-height: 70%;
   overflow: auto;

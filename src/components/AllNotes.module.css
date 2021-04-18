@@ -1,0 +1,60 @@
+.container {
+  margin: 2rem;
+  position: relative;
+}
+.notesGrid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+}
+.note {
+  margin: 1rem;
+  position: relative;
+  border: 1px solid black;
+  border-radius: 3px;
+}
+.note .page {
+  font-size: 2rem;
+  text-align: center;
+}
+.note textarea {
+  padding: 10px;
+  background-color: hsl(45, 100%, 95%);
+
+  font-family: inherit;
+  font-size: 1rem;
+  border: none;
+  outline: none;
+}
+.options {
+  text-align: center;
+}
+.options button {
+  margin: 1rem;
+}
+.saving {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+.deleteNote {
+  position: absolute;
+  font-size: 1.5rem;
+  top: 5px;
+  left: 10px;
+}
+.deleteNote:hover {
+  color: rgb(255, 72, 72);
+  cursor: pointer;
+}
+.expandNote {
+  position: absolute;
+  font-size: 1.5rem;
+  top: 5px;
+  right: 10px;
+}
+.expandNote:hover {
+  color: rgb(0, 131, 50);
+  cursor: pointer;
+}
