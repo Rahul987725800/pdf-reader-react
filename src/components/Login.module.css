@@ -1,0 +1,78 @@
+.container {
+  height: 100%;
+  min-height: 100vh;
+  background-size: cover;
+  background-position: center;
+  color: white;
+}
+.inputForm {
+  width: 35%;
+  margin-left: 60%;
+  padding-top: 6%;
+}
+@media (max-width: 900px) {
+  .inputForm {
+    width: 60%;
+    margin-left: 30%;
+  }
+}
+@media (max-width: 600px) {
+  .inputForm {
+    width: 90%;
+    margin: auto;
+  }
+}
+.header {
+  color: white;
+  text-align: center;
+  font-size: 3rem;
+  font-weight: 500;
+  margin-bottom: 2rem;
+}
+.errorBlock {
+  background-color: rgba(255, 255, 255, 0.151);
+  padding: 1rem 2rem;
+  border-radius: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.errorBlock .message {
+}
+.errorBlock .icon {
+  cursor: pointer;
+}
+.inputBlock {
+  margin: -10px 0;
+}
+.inputBlock label {
+  position: relative;
+  left: 15px;
+  top: 30px;
+  color: black;
+}
+.inputBlock input {
+  padding-left: 40px;
+  width: 100%;
+  padding-top: 0.7rem;
+  padding-bottom: 0.7rem;
+  border-radius: 1rem;
+  outline: none;
+}
+.buttons {
+  margin-top: 1.5rem;
+  text-align: center;
+}
+.fatButton {
+  padding: 0.8rem 0;
+  border-radius: 1rem;
+  margin: 1rem 0;
+  width: 100%;
+  color: white;
+}
+.fatButton.login {
+  background-color: rgb(0, 158, 66);
+}
+.fatButton.signup {
+  background-color: rgb(0, 111, 175);
+}

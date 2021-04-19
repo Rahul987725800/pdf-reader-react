@@ -1,8 +1,9 @@
 import React, { useEffect, useRef } from 'react';
 import { Document, Page } from 'react-pdf/dist/umd/entry.webpack';
 import styles from './PdfReader.module.css';
-
+import lodash from 'lodash';
 import { usePdf } from '../provider/PdfContextProvider';
+import { isMobile } from 'react-device-detect';
 
 export default function PdfReader() {
   const fileInputRef = useRef();
@@ -75,6 +76,16 @@ export default function PdfReader() {
   };
   return (
     <div className={styles.container}>
+      {!isMobile && Navbar()}
+      <div className={styles.documentContainer + ' non-draggable'}>
+        {!isMobile && Arrows()}
+        {DocumentRendered()}
+      </div>
+    </div>
+  );
+
+  function Navbar() {
+    return (
       <div className={styles.navBar}>
         <div className={styles.header}>
           <button
@@ -132,7 +143,7 @@ export default function PdfReader() {
             &nbsp;/ &nbsp;{numPages || '--'}
           </p>
           <div>
-            <label>Zoom:</label>
+            <label>Zoom :&nbsp;&nbsp;</label>
             <input
               type="range"
               value={scale * 33}
@@ -146,7 +157,12 @@ export default function PdfReader() {
           </div>
         </div>
       </div>
-      <div className={styles.documentContainer + ' non-draggable'}>
+    );
+  }
+
+  function Arrows() {
+    return (
+      <>
         <div
           className={styles.arrow + ' ' + styles.prevArrow}
           style={{
@@ -156,36 +172,6 @@ export default function PdfReader() {
         >
           <i className="fa fa-arrow-left"></i>
         </div>
-        {pdfFile ? (
-          <Document
-            file={pdfFile}
-            onLoadSuccess={onDocumentLoadSuccess}
-            className={styles.documentUpperPart}
-          >
-            <Page
-              scale={scale}
-              pageNumber={pageNumber}
-              onLoadSuccess={removeTextLayerOffset}
-              className={styles.page}
-            ></Page>
-          </Document>
-        ) : (
-          <p style={{ textAlign: 'center' }}>
-            Choose PDF File <br />
-            or
-            <br /> Drop the PDF here
-            <br />
-            <input
-              className={styles.fileDropInput}
-              type="file"
-              onChange={handleFile}
-              onClick={(e) => {
-                e.preventDefault();
-              }}
-            ></input>
-          </p>
-        )}
-
         <div
           className={styles.arrow + ' ' + styles.nextArrow}
           style={{
@@ -195,8 +181,39 @@ export default function PdfReader() {
         >
           <i className="fa fa-arrow-right"></i>
         </div>
-        {/* even after pdf is loaded file drop works  */}
-      </div>
-    </div>
-  );
+      </>
+    );
+  }
+
+  function DocumentRendered() {
+    return pdfFile ? (
+      <Document
+        file={pdfFile}
+        onLoadSuccess={onDocumentLoadSuccess}
+        className={styles.documentUpperPart}
+        renderMode="svg" // more clear compared to canvas
+      >
+        {lodash.range(1, numPages + 1).map((page) => (
+          <Page
+            scale={scale}
+            pageNumber={page}
+            onLoadSuccess={removeTextLayerOffset}
+            className={styles.page}
+          ></Page>
+        ))}
+      </Document>
+    ) : (
+      <p style={{ textAlign: 'center' }}>
+        Click to Choose PDF File <br />
+        or
+        <br /> Drop the PDF here
+        <br />
+        <input
+          className={styles.fileDropInput}
+          type="file"
+          onChange={handleFile}
+        ></input>
+      </p>
+    );
+  }
 }

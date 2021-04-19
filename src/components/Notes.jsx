@@ -11,12 +11,12 @@ function Notes() {
     changedPageContent,
     addNewPage,
   } = useNotes();
-  const { pageNumber, setLayout } = usePdf();
+  const { pageNumber, setLayout, fileName } = usePdf();
   const getValue = () => {
     if (pageToData[pageNumber]) {
       return pageToData[pageNumber].content;
     } else {
-      addNewPage(pageNumber);
+      addNewPage(pageNumber, true);
     }
   };
   return (
@@ -65,8 +65,12 @@ function Notes() {
           ></textarea>
         </div>
         <div className={styles.buttons}>
-          <Link to="/notes">All Notes</Link>
-          {saving ? <p>Saving...</p> : <p></p>}
+          <Link to="/notes">
+            Other Notes for{' '}
+            {[...fileName].splice(0, 15).join('') +
+              (fileName.length > 15 ? '..' : '')}
+          </Link>
+          {/* {saving ? <p>Saving...</p> : <p></p>} */}
 
           <button
             className="danger"

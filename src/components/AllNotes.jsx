@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import { isMobile } from 'react-device-detect';
 import { Link } from 'react-router-dom';
 import styles from './AllNotes.module.css';
 import { useNotes } from '../provider/NotesContextProvider';
@@ -11,6 +12,7 @@ function AllNotes() {
     addNewPage,
     deleteAllNotes,
   } = useNotes();
+
   const [expandedNotes, setExpandedNotes] = useState([]);
   return (
     <div className={styles.container}>
@@ -38,39 +40,50 @@ function AllNotes() {
       </div>
       <div className={styles.notesGrid}>
         {Object.keys(pageToData).map((pageNum) => {
-          return pageToData[pageNum].content ? (
-            <div key={pageNum} className={styles.note}>
-              <div className={styles.page}>
-                <i
-                  className={'fa fa-expand ' + styles.expandNote}
-                  onClick={() => {
-                    setExpandedNotes((enotes) => {
-                      if (enotes.includes(pageNum)) {
-                        return enotes.filter((page) => page !== pageNum);
-                      } else {
-                        return [pageNum, ...enotes];
-                      }
-                    });
+          return (
+            (!pageToData[pageNum].addedByState ||
+              pageToData[pageNum].content) && (
+              <div key={pageNum} className={styles.note}>
+                <div className={styles.page}>
+                  {!isMobile && (
+                    <i
+                      className={'fa fa-expand ' + styles.expandNote}
+                      onClick={() => {
+                        setExpandedNotes((enotes) => {
+                          if (enotes.includes(pageNum)) {
+                            return enotes.filter((page) => page !== pageNum);
+                          } else {
+                            return [pageNum, ...enotes];
+                          }
+                        });
+                      }}
+                    ></i>
+                  )}
+                  {pageNum}{' '}
+                  <i
+                    className={'fa fa-trash ' + styles.deleteNote}
+                    onClick={() => deleteNote(pageNum)}
+                  ></i>
+                </div>
+                <textarea
+                  value={pageToData[pageNum].content}
+                  onChange={(e) => {
+                    changedPageContent(pageNum, e.target.value);
                   }}
-                ></i>
-                {pageNum}{' '}
-                <i
-                  className={'fa fa-trash ' + styles.deleteNote}
-                  onClick={() => deleteNote(pageNum)}
-                ></i>
+                  style={{
+                    width:
+                      expandedNotes.includes(pageNum) || isMobile
+                        ? '90vw'
+                        : '25vw',
+                    height:
+                      expandedNotes.includes(pageNum) || isMobile
+                        ? '70vh'
+                        : '30vh',
+                  }}
+                ></textarea>
               </div>
-              <textarea
-                value={pageToData[pageNum].content}
-                onChange={(e) => {
-                  changedPageContent(pageNum, e.target.value);
-                }}
-                style={{
-                  width: expandedNotes.includes(pageNum) ? '90vw' : '25vw',
-                  height: expandedNotes.includes(pageNum) ? '70vh' : '30vh',
-                }}
-              ></textarea>
-            </div>
-          ) : null;
+            )
+          );
         })}
       </div>
     </div>

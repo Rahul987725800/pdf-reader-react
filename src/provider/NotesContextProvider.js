@@ -115,7 +115,7 @@ export const NotesProvider = ({ children }) => {
       return uptd;
     });
   };
-  const addNewPage = (pageNum) => {
+  const addNewPage = (pageNum, addedByState = false) => {
     setPageToData((ptd) => {
       const uptd = { ...ptd };
       uptd[pageNum] = {
@@ -123,6 +123,7 @@ export const NotesProvider = ({ children }) => {
         update: new Debounce((pageToData, fileName, loginState) => {
           postNote(pageNum, pageToData, fileName, loginState);
         }, 1000),
+        addedByState,
       };
       return uptd;
     });

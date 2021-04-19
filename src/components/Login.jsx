@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import Loader from 'react-loader-spinner';
 import { Redirect } from 'react-router';
 import { useLogin } from '../provider/LoginContextProvider';
-
+import styles from './Login.module.css';
+import Wallpaper from '../images/wallpaper.jpg';
 function Login() {
   const {
     loginState,
@@ -15,44 +17,71 @@ function Login() {
     authCheckState();
   }, []);
   return (
-    <div>
-      {loginState.checkingUser && <p>Checking User</p>}
+    <div
+      className={styles.container}
+      style={{
+        backgroundImage: `url(${Wallpaper})`,
+      }}
+    >
+      {/* {loginState.checkingUser && <p>Checking User</p>} */}
       {loginState.user && <Redirect to="/pdf" />}
-      {loginState.loading && <p>Loading</p>}
-      {loginState.error && (
-        <p>
-          Error : {loginState.error} <button onClick={dismissError}>X</button>
-        </p>
+      {(loginState.checkingUser || loginState.loading) && (
+        <Loader
+          type="Puff"
+          color="#00BFFF"
+          height={50}
+          width={50}
+          style={{ position: 'fixed' }}
+        />
       )}
-
       <form
         onSubmit={(e) => {
           e.preventDefault();
         }}
+        className={styles.inputForm}
       >
-        <div>
-          <label htmlFor="email">Email : </label>
+        <h1 className={styles.header}>Welcome Back</h1>
+
+        {loginState.error && (
+          <Error error={loginState.error} dismissError={dismissError} />
+        )}
+
+        <div className={styles.inputBlock}>
+          <label htmlFor="email">
+            <i className=" fa fa-envelope"></i>
+          </label>
           <input
             type="email"
             id="email"
             onChange={(e) => setEmail(e.target.value)}
             value={email}
+            placeholder="Email"
           ></input>
         </div>
-        <div>
-          <label htmlFor="password">Password : </label>
+        <div className={styles.inputBlock}>
+          <label htmlFor="password">
+            <i className=" fa fa-lock"></i>
+          </label>
           <input
             type="password"
             id="password"
             onChange={(e) => setPassword(e.target.value)}
             value={password}
+            placeholder="Password"
           />
         </div>
-        <div>
-          <button onClick={() => loginOrSignup({ email, password }, false)}>
+        <div className={styles.buttons}>
+          <button
+            onClick={() => loginOrSignup({ email, password }, false)}
+            className={styles.fatButton + ' ' + styles.login}
+          >
             Login
           </button>
-          <button onClick={() => loginOrSignup({ email, password }, true)}>
+          <h3>OR</h3>
+          <button
+            onClick={() => loginOrSignup({ email, password }, true)}
+            className={styles.fatButton + ' ' + styles.signup}
+          >
             Sign Up
           </button>
         </div>
@@ -62,3 +91,14 @@ function Login() {
 }
 
 export default Login;
+
+function Error({ error, dismissError }) {
+  return (
+    <div className={styles.errorBlock}>
+      <div className={styles.message}>{error}</div>
+      <div onClick={dismissError} className={styles.icon}>
+        &#10005;
+      </div>
+    </div>
+  );
+}

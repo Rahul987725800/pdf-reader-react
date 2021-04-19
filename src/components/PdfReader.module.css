@@ -27,7 +27,7 @@
   height: 3rem;
   padding: 10px;
   align-items: center;
-  justify-content: space-evenly;
+  justify-content: space-between;
 }
 
 .pageInput {
@@ -44,6 +44,7 @@
   left: 0;
   height: 100%;
   width: 100%;
+  opacity: 0;
 }
 .documentContainer {
   z-index: 1;
@@ -52,7 +53,8 @@
 .documentUpperPart {
   margin-top: 0;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  /* justify-content: center; */
 }
 .arrow {
   position: absolute;
@@ -67,6 +69,7 @@
 .arrow:hover {
   color: rgba(61, 61, 61, 0.295);
 }
+
 .arrow i {
   position: fixed;
   top: 50%;
