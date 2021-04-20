@@ -1,9 +1,11 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Document, Page } from 'react-pdf/dist/umd/entry.webpack';
 import styles from './PdfReader.module.css';
 import lodash from 'lodash';
 import { usePdf } from '../provider/PdfContextProvider';
 import { isMobile } from 'react-device-detect';
+import { Debounce } from '../utils';
+import { Link } from 'react-router-dom';
 
 export default function PdfReader() {
   const fileInputRef = useRef();
@@ -20,25 +22,15 @@ export default function PdfReader() {
     setPageNumber,
     setLayout,
     initialLayout,
+    setProgramaticScroll,
   } = usePdf();
-
+  const [localPageNumber, setLocalPageNumber] = useState(pageNumber);
+  const [localPdfFile, setLocalPdfFile] = useState(pdfFile);
+  const activePageRef = useRef();
   function onDocumentLoadSuccess({ numPages }) {
     setNumPages(numPages);
   }
 
-  function changePage(offset) {
-    if (pdfFile) setPageNumber((prevPageNumber) => prevPageNumber + offset);
-  }
-
-  function previousPage() {
-    if (pageNumber === 1) return;
-    changePage(-1);
-  }
-
-  function nextPage() {
-    if (pageNumber === numPages) return;
-    changePage(1);
-  }
   function removeTextLayerOffset() {
     const textLayers = document.querySelectorAll(
       '.react-pdf__Page__textContent'
@@ -48,7 +40,7 @@ export default function PdfReader() {
       style.top = '0';
       style.left = '0';
       style.transform = '';
-      style.margin = '0 auto';
+      // style.margin = '0 auto';
     });
   }
   useEffect(() => {
@@ -74,11 +66,31 @@ export default function PdfReader() {
       setPageNumber(1);
     }
   };
+  useEffect(() => {
+    setLocalPdfFile(null);
+    setLocalPdfFile(pdfFile);
+    setTimeout(() => {
+      inputChangedHandler.current.call(pageNumber);
+    }, 0);
+  }, [scale, pdfFile]);
+
+  const inputChangedHandler = useRef(
+    new Debounce((pageNumber) => {
+      setPageNumber(pageNumber);
+      setProgramaticScroll(true);
+      setTimeout(() => {
+        activePageRef?.current?.scrollIntoView(true);
+      }, 0);
+    }),
+    500
+  );
+  useEffect(() => {
+    setLocalPageNumber(pageNumber);
+  }, [pageNumber]);
   return (
     <div className={styles.container}>
       {!isMobile && Navbar()}
       <div className={styles.documentContainer + ' non-draggable'}>
-        {!isMobile && Arrows()}
         {DocumentRendered()}
       </div>
     </div>
@@ -94,7 +106,11 @@ export default function PdfReader() {
           >
             Reset Layout
           </button>
-          <p>{fileName}</p>
+          <Link to="/books" className="light">
+            Saved Books/Notes
+          </Link>
+          <p className={styles.fileName}>{fileName}</p>
+          <p></p>
         </div>
         <div className={styles.controls + ' non-draggable'}>
           <div>
@@ -114,30 +130,15 @@ export default function PdfReader() {
               Choose File
             </button>
           </div>
-          <div>
-            <button
-              type="button"
-              disabled={pageNumber <= 1}
-              onClick={previousPage}
-            >
-              Previous
-            </button>
-            &nbsp; &nbsp;
-            <button
-              type="button"
-              disabled={pageNumber >= numPages}
-              onClick={nextPage}
-            >
-              Next
-            </button>
-          </div>
           <p>
             Page{' '}
             <input
               className={styles.pageInput}
-              value={pdfFile && pageNumber ? pageNumber : ''}
+              value={pdfFile && localPageNumber ? localPageNumber : ''}
               onChange={(e) => {
-                setPageNumber(+e.target.value);
+                setLocalPageNumber(+e.target.value);
+                if (+e.target.value)
+                  inputChangedHandler.current.call(+e.target.value);
               }}
             ></input>
             &nbsp;/ &nbsp;{numPages || '--'}
@@ -160,47 +161,30 @@ export default function PdfReader() {
     );
   }
 
-  function Arrows() {
-    return (
-      <>
-        <div
-          className={styles.arrow + ' ' + styles.prevArrow}
-          style={{
-            width: `${(10 * 1.5) / scale - 5}%`,
-          }}
-          onClick={previousPage}
-        >
-          <i className="fa fa-arrow-left"></i>
-        </div>
-        <div
-          className={styles.arrow + ' ' + styles.nextArrow}
-          style={{
-            width: `${(10 * 1.5) / scale - 5}%`,
-          }}
-          onClick={nextPage}
-        >
-          <i className="fa fa-arrow-right"></i>
-        </div>
-      </>
-    );
-  }
-
   function DocumentRendered() {
     return pdfFile ? (
       <Document
-        file={pdfFile}
+        file={localPdfFile}
         onLoadSuccess={onDocumentLoadSuccess}
         className={styles.documentUpperPart}
         renderMode="svg" // more clear compared to canvas
       >
-        {lodash.range(1, numPages + 1).map((page) => (
-          <Page
-            scale={scale}
-            pageNumber={page}
-            onLoadSuccess={removeTextLayerOffset}
-            className={styles.page}
-          ></Page>
-        ))}
+        {lodash
+          .range(1, numPages + 1)
+          .map((page) =>
+            page > Math.max(0, pageNumber - 4) &&
+            page < Math.min(numPages + 1, pageNumber + 4) ? (
+              <Page
+                scale={scale}
+                pageNumber={page}
+                onLoadSuccess={removeTextLayerOffset}
+                className={styles.page}
+                inputRef={pageNumber === page ? activePageRef : null}
+                loading=""
+                error=""
+              ></Page>
+            ) : null
+          )}
       </Document>
     ) : (
       <p style={{ textAlign: 'center' }}>

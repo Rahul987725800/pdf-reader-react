@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { isMobile } from 'react-device-detect';
 import { Link } from 'react-router-dom';
 import styles from './AllNotes.module.css';
 import { useNotes } from '../provider/NotesContextProvider';
-function AllNotes() {
+import { usePdf } from '../provider/PdfContextProvider';
+function AllNotes({ history }) {
   const {
     saving,
     pageToData,
@@ -11,17 +12,33 @@ function AllNotes() {
     changedPageContent,
     addNewPage,
     deleteAllNotes,
+    fetchData,
   } = useNotes();
+  const [localFileName, setLocalFileName] = useState();
 
+  const { fileName } = usePdf();
+  useEffect(() => {
+    // console.log(history);
+    const path = history.location.pathname.split('/');
+    // console.log(path);
+    const bookName = path[path.length - 1];
+    if (bookName !== 'notes' && path.length === 3) {
+      setLocalFileName(bookName);
+      fetchData(bookName);
+    } else {
+      setLocalFileName(fileName);
+    }
+  }, []);
   const [expandedNotes, setExpandedNotes] = useState([]);
   return (
     <div className={styles.container}>
       <div>
-        <Link to="/pdf">
+        <Link onClick={() => history.goBack()}>
           <i className="fa fa-arrow-left"></i>&nbsp;&nbsp;Go Back
         </Link>
         {saving && <p className={styles.saving}>Saving Changes ...</p>}
       </div>
+      <h1 className="headerTop">{localFileName}</h1>
       <div className={styles.options}>
         <button
           onClick={() => {
@@ -34,7 +51,10 @@ function AllNotes() {
         >
           Add New
         </button>
-        <button onClick={deleteAllNotes} className="danger">
+        <button
+          onClick={() => deleteAllNotes(localFileName)}
+          className="danger"
+        >
           Delete All
         </button>
       </div>
@@ -62,13 +82,13 @@ function AllNotes() {
                   {pageNum}{' '}
                   <i
                     className={'fa fa-trash ' + styles.deleteNote}
-                    onClick={() => deleteNote(pageNum)}
+                    onClick={() => deleteNote(pageNum, localFileName)}
                   ></i>
                 </div>
                 <textarea
                   value={pageToData[pageNum].content}
                   onChange={(e) => {
-                    changedPageContent(pageNum, e.target.value);
+                    changedPageContent(pageNum, e.target.value, localFileName);
                   }}
                   style={{
                     width:

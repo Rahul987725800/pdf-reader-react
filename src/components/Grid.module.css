@@ -8,3 +8,8 @@
 .noScrollBar::-webkit-scrollbar {
   display: none;
 }
+.mobileBlock {
+  height: 90vh;
+  width: 100vw;
+  overflow: auto;
+}

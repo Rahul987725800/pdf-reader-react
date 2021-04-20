@@ -1,15 +1,12 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState } from 'react';
 import { Debounce, firebaseUrl } from '../utils';
 import { useLogin } from './LoginContextProvider';
-import { usePdf } from './PdfContextProvider';
 const NotesContext = React.createContext();
 
 export const useNotes = () => {
   return useContext(NotesContext);
 };
 export const NotesProvider = ({ children }) => {
-  const { pdfFile } = usePdf();
-  const { fileName } = usePdf();
   const { loginState } = useLogin();
   const [pageToData, setPageToData] = useState({});
   const [saving, setSaving] = useState(false);
@@ -43,7 +40,7 @@ export const NotesProvider = ({ children }) => {
         setSaving(false);
       });
   };
-  const deleteNote = (pageNumber) => {
+  const deleteNote = (pageNumber, fileName) => {
     let url = `${firebaseUrl}users/${loginState.userId}/books/${fileName}/notes/${pageNumber}.json`;
     let method = 'DELETE';
     return fetch(url, {
@@ -63,8 +60,8 @@ export const NotesProvider = ({ children }) => {
       });
   };
 
-  const fetchData = () => {
-    // console.log('fetching data');
+  const fetchData = (fileName) => {
+    console.log('fetching data ' + fileName);
     fetch(
       `${firebaseUrl}users/${loginState.userId}/books/${fileName}/notes.json`
     )
@@ -93,7 +90,7 @@ export const NotesProvider = ({ children }) => {
       .catch((err) => console.log(err));
   };
 
-  const deleteAllNotes = () => {
+  const deleteAllNotes = (fileName) => {
     fetch(
       `${firebaseUrl}users/${loginState.userId}/books/${fileName}/notes.json`,
       { method: 'DELETE' }
@@ -105,7 +102,7 @@ export const NotesProvider = ({ children }) => {
       })
       .then((err) => console.log(err));
   };
-  const changedPageContent = (pageNum, value) => {
+  const changedPageContent = (pageNum, value, fileName) => {
     setPageToData((ptd) => {
       const page = { ...ptd[pageNum] };
       page.content = value;
@@ -128,9 +125,7 @@ export const NotesProvider = ({ children }) => {
       return uptd;
     });
   };
-  useEffect(() => {
-    fetchData();
-  }, [pdfFile]);
+
   const exportedValues = {
     pageToData,
     setPageToData,

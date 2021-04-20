@@ -1,17 +1,21 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useNotes } from '../provider/NotesContextProvider';
 import { usePdf } from '../provider/PdfContextProvider';
 import styles from './Notes.module.css';
 function Notes() {
   const {
-    saving,
     pageToData,
     deleteNote,
     changedPageContent,
     addNewPage,
+    fetchData,
   } = useNotes();
   const { pageNumber, setLayout, fileName } = usePdf();
+
+  useEffect(() => {
+    fetchData(fileName);
+  }, [fileName]);
   const getValue = () => {
     if (pageToData[pageNumber]) {
       return pageToData[pageNumber].content;
@@ -22,7 +26,7 @@ function Notes() {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <p>Notes</p>
+        <p>Notes for Page {pageNumber}</p>
         <p>
           <i
             className={'fa fa-expand ' + styles.expandIcon}
@@ -60,7 +64,7 @@ function Notes() {
           <textarea
             value={getValue()}
             onChange={(e) => {
-              changedPageContent(pageNumber, e.target.value);
+              changedPageContent(pageNumber, e.target.value, fileName);
             }}
           ></textarea>
         </div>
@@ -75,7 +79,7 @@ function Notes() {
           <button
             className="danger"
             onClick={() => {
-              deleteNote(pageNumber);
+              deleteNote(pageNumber, fileName);
             }}
           >
             Clear

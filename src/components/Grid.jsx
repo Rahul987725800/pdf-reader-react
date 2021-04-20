@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
 import Dictionary from './Dictionary';
 import PdfReader from './PdfReader';
 import styles from './Grid.module.css';
@@ -10,24 +10,59 @@ import { isMobile } from 'react-device-detect';
 
 export const WordContext = React.createContext();
 function Grid() {
-  useEffect(() => {
-    window.addEventListener('swiped-left', (e) => {
-      console.log('swiped left');
-    });
-    window.addEventListener('swiped-right', (e) => {
-      console.log('swiped right');
-    });
-    window.addEventListener('swiped-up', (e) => {
-      console.log('swiped up');
-    });
-    window.addEventListener('swiped-down', (e) => {
-      console.log('swiped down');
-    });
-  }, []);
-  const { layout, setLayout } = usePdf();
+  const {
+    layout,
+    setLayout,
+    setPageNumber,
+    programaticScroll,
+    setProgramaticScroll,
+  } = usePdf();
+
+  const pdfScroller = (e) => {
+    // console.log('scrolled');
+    if (programaticScroll) {
+      setProgramaticScroll(false);
+    } else {
+      const documentRef = document.querySelector('.react-pdf__Document');
+      const nPages = documentRef.children.length;
+      let pageHeight = e.target.scrollHeight / nPages;
+
+      setPageNumber((pn) => {
+        return (
+          pn - Math.min(pn - 1, 3) + Math.floor(e.target.scrollTop / pageHeight)
+        );
+      });
+    }
+
+    // console.log(e.target.scrollTop);
+    // console.log(e.target.scrollHeight);
+    // console.log(e.target.offsetHeight);
+  };
   return isMobile ? MobileGrid() : DesktopGrid();
   function MobileGrid() {
-    return <PdfReader />;
+    const [activeTab, setActiveTab] = useState('pdf'); // 'dic', 'note', 'pdf'
+    switch (activeTab) {
+      case 'dic':
+        return (
+          <div className={styles.mobileBlock}>
+            <Dictionary />
+          </div>
+        );
+      case 'note':
+        return (
+          <div className={styles.mobileBlock}>
+            <Notes />
+          </div>
+        );
+      case 'pdf':
+        return (
+          <div className={styles.mobileBlock}>
+            <PdfReader />
+          </div>
+        );
+      default:
+        return null;
+    }
   }
   function DesktopGrid() {
     return (
@@ -48,7 +83,7 @@ function Grid() {
         }}
       >
         <div key="a">
-          <div className={styles.block}>
+          <div className={styles.block} onScroll={pdfScroller}>
             <PdfReader />
           </div>
         </div>
