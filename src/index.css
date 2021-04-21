@@ -97,3 +97,11 @@ button.danger {
   margin: auto;
   word-wrap: break-word;
 }
+@media (max-width: 900px) {
+  .headerTop {
+    font-size: 1.5rem;
+  }
+  .headerSecond {
+    font-size: 1rem;
+  }
+}

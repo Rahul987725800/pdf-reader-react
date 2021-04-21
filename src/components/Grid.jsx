@@ -3,6 +3,7 @@ import Dictionary from './Dictionary';
 import PdfReader from './PdfReader';
 import styles from './Grid.module.css';
 import Notes from './Notes';
+import Books from '../components/Books';
 import { percent } from '../utils';
 import GridLayout from 'react-grid-layout';
 import { usePdf } from '../provider/PdfContextProvider';
@@ -41,28 +42,57 @@ function Grid() {
   return isMobile ? MobileGrid() : DesktopGrid();
   function MobileGrid() {
     const [activeTab, setActiveTab] = useState('pdf'); // 'dic', 'note', 'pdf'
-    switch (activeTab) {
-      case 'dic':
-        return (
-          <div className={styles.mobileBlock}>
-            <Dictionary />
-          </div>
-        );
-      case 'note':
-        return (
-          <div className={styles.mobileBlock}>
-            <Notes />
-          </div>
-        );
-      case 'pdf':
-        return (
-          <div className={styles.mobileBlock}>
-            <PdfReader />
-          </div>
-        );
-      default:
-        return null;
-    }
+    const activeComponent = () => {
+      switch (activeTab) {
+        case 'dic':
+          return (
+            <div className={styles.mobileBlock}>
+              <Dictionary />
+            </div>
+          );
+        case 'note':
+          return (
+            <div className={styles.mobileBlock}>
+              <Notes />
+            </div>
+          );
+        case 'pdf':
+          return (
+            <div className={styles.mobileBlock} onScroll={pdfScroller}>
+              <PdfReader />
+            </div>
+          );
+        default:
+          return null;
+      }
+    };
+    return (
+      <div>
+        <div className={styles.tabs}>
+          <p
+            onClick={() => setActiveTab('dic')}
+            className={activeTab === 'dic' ? styles.active : ''}
+          >
+            Dictionary &nbsp; <i className="fa fa-language"></i>
+          </p>
+
+          <p
+            onClick={() => setActiveTab('pdf')}
+            className={activeTab === 'pdf' ? styles.active : ''}
+          >
+            PDF &nbsp; <i className="fa fa-book"></i>
+          </p>
+
+          <p
+            onClick={() => setActiveTab('note')}
+            className={activeTab === 'note' ? styles.active : ''}
+          >
+            Notes &nbsp; <i className="fa fa-pencil"></i>
+          </p>
+        </div>
+        {activeComponent()}
+      </div>
+    );
   }
   function DesktopGrid() {
     return (

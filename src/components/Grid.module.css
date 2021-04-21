@@ -8,8 +8,30 @@
 .noScrollBar::-webkit-scrollbar {
   display: none;
 }
+
 .mobileBlock {
-  height: 90vh;
+  height: calc(100vh - 2.5rem);
   width: 100vw;
   overflow: auto;
+}
+.tabs {
+  display: flex;
+  justify-content: space-between;
+  height: 2.5rem;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.tabs p {
+  flex: 1;
+  background-color: #43baff;
+  text-align: center;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 600;
+}
+.tabs p.active {
+  border-bottom: 2px solid white;
 }

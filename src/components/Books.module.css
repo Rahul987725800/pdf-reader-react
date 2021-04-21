@@ -5,4 +5,10 @@
   width: 70%;
   margin: auto;
   margin-top: 3rem;
+  word-wrap: break-word;
+}
+@media (max-width: 900px) {
+  .books {
+    width: 100%;
+  }
 }

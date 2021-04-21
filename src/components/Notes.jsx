@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useNotes } from '../provider/NotesContextProvider';
 import { usePdf } from '../provider/PdfContextProvider';
+import { truncate } from '../utils';
 import styles from './Notes.module.css';
 function Notes() {
   const {
@@ -69,11 +70,7 @@ function Notes() {
           ></textarea>
         </div>
         <div className={styles.buttons}>
-          <Link to="/notes">
-            Other Notes for{' '}
-            {[...fileName].splice(0, 15).join('') +
-              (fileName.length > 15 ? '..' : '')}
-          </Link>
+          <Link to="/notes">Other Notes for {truncate(fileName, 10)}</Link>
           {/* {saving ? <p>Saving...</p> : <p></p>} */}
 
           <button

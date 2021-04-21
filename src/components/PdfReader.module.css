@@ -1,6 +1,5 @@
 .container {
   height: 100%;
-  width: 100%;
   position: relative;
 }
 .navBar {
@@ -28,6 +27,17 @@
   width: calc(100% - 20px);
   z-index: -10;
 }
+@media (max-width: 600px) {
+  .header {
+    height: 2.5rem;
+  }
+  .navBar {
+    height: 5rem;
+  }
+  .fileName {
+    text-align: right;
+  }
+}
 .resetLayout {
   position: absolute;
   right: 10px;
@@ -40,6 +50,15 @@
   justify-content: space-between;
 }
 
+@media (max-width: 600px) {
+  .controls {
+    padding: 0;
+    height: 2.5rem;
+  }
+  .chooseFileButton {
+    padding: 5px;
+  }
+}
 .pageInput {
   width: 3rem;
   background-color: rgb(46, 46, 46);
@@ -56,9 +75,7 @@
   width: 100%;
   opacity: 0;
 }
-.documentContainer {
-  padding-top: 6rem;
-}
+
 .documentUpperPart {
   display: flex;
   flex-direction: column;

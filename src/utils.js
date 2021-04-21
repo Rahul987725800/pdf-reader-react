@@ -27,3 +27,8 @@ export const returnDiffentFalsyValue = (val) => {
     }
   }
 };
+export const truncate = (fileName, len) => {
+  return (
+    [...fileName].splice(0, len).join('') + (fileName.length > len ? '..' : '')
+  );
+};

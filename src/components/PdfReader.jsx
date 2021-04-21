@@ -4,7 +4,7 @@ import styles from './PdfReader.module.css';
 import lodash from 'lodash';
 import { usePdf } from '../provider/PdfContextProvider';
 import { isMobile } from 'react-device-detect';
-import { Debounce } from '../utils';
+import { Debounce, truncate } from '../utils';
 import { Link } from 'react-router-dom';
 
 export default function PdfReader() {
@@ -71,7 +71,7 @@ export default function PdfReader() {
     setLocalPdfFile(pdfFile);
     setTimeout(() => {
       inputChangedHandler.current.call(pageNumber);
-    }, 0);
+    }, 100);
   }, [scale, pdfFile]);
 
   const inputChangedHandler = useRef(
@@ -89,8 +89,13 @@ export default function PdfReader() {
   }, [pageNumber]);
   return (
     <div className={styles.container}>
-      {!isMobile && Navbar()}
-      <div className={styles.documentContainer + ' non-draggable'}>
+      {Navbar()}
+      <div
+        className="non-draggable"
+        style={{
+          paddingTop: isMobile ? '8.5rem' : '6rem',
+        }}
+      >
         {DocumentRendered()}
       </div>
     </div>
@@ -98,18 +103,25 @@ export default function PdfReader() {
 
   function Navbar() {
     return (
-      <div className={styles.navBar}>
+      <div
+        className={styles.navBar}
+        style={{
+          marginTop: isMobile && '2.5rem',
+        }}
+      >
         <div className={styles.header}>
-          <button
-            class={styles.resetLayout}
-            onClick={() => setLayout(initialLayout)}
-          >
-            Reset Layout
-          </button>
+          {!isMobile && (
+            <button
+              class={styles.resetLayout}
+              onClick={() => setLayout(initialLayout)}
+            >
+              Reset Layout
+            </button>
+          )}
           <Link to="/books" className="light">
             Saved Books/Notes
           </Link>
-          <p className={styles.fileName}>{fileName}</p>
+          <p className={styles.fileName}>{truncate(fileName, 15)}</p>
           <p></p>
         </div>
         <div className={styles.controls + ' non-draggable'}>
@@ -126,12 +138,13 @@ export default function PdfReader() {
               onClick={() => {
                 fileInputRef.current.click();
               }}
+              className={styles.chooseFileButton}
             >
               Choose File
             </button>
           </div>
           <p>
-            Page{' '}
+            {!isMobile && 'Page'}
             <input
               className={styles.pageInput}
               value={pdfFile && localPageNumber ? localPageNumber : ''}
@@ -144,11 +157,11 @@ export default function PdfReader() {
             &nbsp;/ &nbsp;{numPages || '--'}
           </p>
           <div>
-            <label>Zoom :&nbsp;&nbsp;</label>
+            {window.innerWidth > 600 && <label>Zoom :&nbsp;&nbsp;</label>}
             <input
               type="range"
               value={scale * 33}
-              min={33}
+              min={16.5}
               max={66}
               onChange={(e) => {
                 // console.log(+e.target.value / 33);

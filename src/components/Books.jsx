@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { isMobile } from 'react-device-detect';
 import { Link } from 'react-router-dom';
 import { useLogin } from '../provider/LoginContextProvider';
 import { firebaseUrl } from '../utils';
@@ -26,6 +27,7 @@ function Books({ history }) {
           <i className="fa fa-arrow-left"></i>&nbsp;&nbsp;Go Back
         </Link>
       </div>
+
       <h1 className="headerTop">Books</h1>
       <h6 className="headerSecond">Click to view notes</h6>
       <div className={styles.books}>
