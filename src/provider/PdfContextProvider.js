@@ -26,6 +26,7 @@ export const PdfProvider = ({ children }) => {
   const [fileName, setFileName] = useState('No PDF Selected');
   const [pdfFile, setPdfFile] = useState(null);
   const [programaticScroll, setProgramaticScroll] = useState(false);
+  const [firstLoad, setFirstLoad] = useState(true);
   useEffect(() => {
     const decideLayout = new Debounce(() => {
       setLayout([]);
@@ -62,6 +63,8 @@ export const PdfProvider = ({ children }) => {
     initialLayout,
     programaticScroll,
     setProgramaticScroll,
+    firstLoad,
+    setFirstLoad,
   };
   return (
     <PdfContext.Provider value={exportedValues}>{children}</PdfContext.Provider>

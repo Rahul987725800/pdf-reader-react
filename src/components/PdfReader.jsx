@@ -23,15 +23,20 @@ export default function PdfReader() {
     setLayout,
     initialLayout,
     setProgramaticScroll,
+    firstLoad,
+    setFirstLoad,
   } = usePdf();
   const [localPageNumber, setLocalPageNumber] = useState(pageNumber);
   const [localPdfFile, setLocalPdfFile] = useState(pdfFile);
   const activePageRef = useRef();
   const [navBarClasses, setNavBarClasses] = useState([styles.navBar]);
   useEffect(() => {
-    setTimeout(() => {
-      setNavBarClasses([styles.navBar, styles.up]);
-    }, 2000);
+    if (firstLoad) {
+      setTimeout(() => {
+        setNavBarClasses([styles.navBar, styles.up]);
+      }, 2000);
+      setFirstLoad(false);
+    }
   }, []);
   function onDocumentLoadSuccess({ numPages }) {
     setNumPages(numPages);
