@@ -12,11 +12,11 @@ function Notes() {
     addNewPage,
     fetchData,
   } = useNotes();
-  const { pageNumber, setLayout, fileName } = usePdf();
+  const { pageNumber, setLayout, fileName, pdfFile } = usePdf();
 
   useEffect(() => {
-    fetchData(fileName);
-  }, [fileName]);
+    if (pdfFile) fetchData(fileName);
+  }, [pdfFile]);
   const getValue = () => {
     if (pageToData[pageNumber]) {
       return pageToData[pageNumber].content;
@@ -70,7 +70,11 @@ function Notes() {
           ></textarea>
         </div>
         <div className={styles.buttons}>
-          <Link to="/notes">Other Notes for {truncate(fileName, 10)}</Link>
+          <Link to="/notes">
+            {pdfFile
+              ? `Other Notes for ${truncate(fileName, 10)}`
+              : `Select PDF to view notes`}
+          </Link>
           {/* {saving ? <p>Saving...</p> : <p></p>} */}
 
           <button

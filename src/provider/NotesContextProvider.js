@@ -62,6 +62,7 @@ export const NotesProvider = ({ children }) => {
 
   const fetchData = (fileName) => {
     console.log('fetching data ' + fileName);
+
     fetch(
       `${firebaseUrl}users/${loginState.userId}/books/${fileName}/notes.json`
     )
