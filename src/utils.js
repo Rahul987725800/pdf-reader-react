@@ -12,10 +12,9 @@ export class Debounce {
   }
 }
 export const getDicUrl = (word) => {
-  return `https://www.dictionaryapi.com/api/v3/references/thesaurus/json/${word}?key=b0fbbe0b-fa8c-4b29-a68d-c452c64d2ea9`;
+  return `https://www.dictionaryapi.com/api/v3/references/thesaurus/json/${word}?key=${process.env.REACT_APP_DICTIONARY_KEY}`;
 };
-export const firebaseUrl =
-  'https://pdfreader-93a01-default-rtdb.firebaseio.com/';
+export const firebaseUrl = process.env.REACT_APP_FIREBASE_URL;
 export const percent = (val, percent) => {
   return (val * percent) / 100;
 };

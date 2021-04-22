@@ -57,7 +57,7 @@ export const LoginProvider = ({ children }) => {
   let loginOrSignup = async (data, signup) => {
     // console.log(data);
     authStartLoading();
-    const apiKey = 'AIzaSyD8AYOBa4_ZS8jdhfBqL6zDrHAQkikTFko';
+    const apiKey = process.env.REACT_APP_AUTH_API_KEY;
     const authData = {
       email: data.email,
       password: data.password,

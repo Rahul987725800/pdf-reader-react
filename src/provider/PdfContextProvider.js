@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { isMobile } from 'react-device-detect';
 import { Debounce } from '../utils';
 const PdfContext = React.createContext();
 export const usePdf = () => useContext(PdfContext);
@@ -29,7 +28,7 @@ export const PdfProvider = ({ children }) => {
   const [programaticScroll, setProgramaticScroll] = useState(false);
   useEffect(() => {
     const decideLayout = new Debounce(() => {
-      setLayout(null);
+      setLayout([]);
       if (window.innerWidth >= 900) {
         setLayout(largeLayout);
         setInitialLayout(largeLayout);
