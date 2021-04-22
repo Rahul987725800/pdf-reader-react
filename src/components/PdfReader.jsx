@@ -29,7 +29,10 @@ export default function PdfReader() {
   const [localPageNumber, setLocalPageNumber] = useState(pageNumber);
   const [localPdfFile, setLocalPdfFile] = useState(pdfFile);
   const activePageRef = useRef();
-  const [navBarClasses, setNavBarClasses] = useState([styles.navBar]);
+  const [navBarClasses, setNavBarClasses] = useState([
+    styles.navBar,
+    firstLoad ? '' : styles.up,
+  ]);
   useEffect(() => {
     if (firstLoad) {
       setTimeout(() => {
