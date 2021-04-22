@@ -27,6 +27,12 @@ export default function PdfReader() {
   const [localPageNumber, setLocalPageNumber] = useState(pageNumber);
   const [localPdfFile, setLocalPdfFile] = useState(pdfFile);
   const activePageRef = useRef();
+  const [navBarClasses, setNavBarClasses] = useState([styles.navBar]);
+  useEffect(() => {
+    setTimeout(() => {
+      setNavBarClasses([styles.navBar, styles.up]);
+    }, 2000);
+  }, []);
   function onDocumentLoadSuccess({ numPages }) {
     setNumPages(numPages);
   }
@@ -88,7 +94,7 @@ export default function PdfReader() {
     setLocalPageNumber(pageNumber);
   }, [pageNumber]);
   return (
-    <div className={styles.container}>
+    <div>
       {Navbar()}
       <div
         className="non-draggable"
@@ -104,9 +110,16 @@ export default function PdfReader() {
   function Navbar() {
     return (
       <div
-        className={styles.navBar}
+        className={navBarClasses.join(' ')}
         style={{
           marginTop: isMobile && '2.5rem',
+        }}
+        onMouseEnter={() => {
+          // console.log('hovered');
+          setNavBarClasses([styles.navBar]);
+        }}
+        onMouseLeave={() => {
+          setNavBarClasses([styles.navBar, styles.up]);
         }}
       >
         <div className={styles.header}>
@@ -188,6 +201,7 @@ export default function PdfReader() {
             page > Math.max(0, pageNumber - 4) &&
             page < Math.min(numPages + 1, pageNumber + 4) ? (
               <Page
+                key={page}
                 scale={scale}
                 pageNumber={page}
                 onLoadSuccess={removeTextLayerOffset}
@@ -201,10 +215,23 @@ export default function PdfReader() {
       </Document>
     ) : (
       <p style={{ textAlign: 'center' }}>
-        Click to Choose PDF File <br />
-        or
-        <br /> Drop the PDF here
-        <br />
+        <p style={{ marginTop: '3rem' }}> Click to Choose PDF File </p>
+
+        <p>
+          <button
+            onClick={() => {
+              fileInputRef.current.click();
+            }}
+            className={styles.chooseFileButton}
+          >
+            Choose File
+          </button>
+        </p>
+
+        <p>OR</p>
+
+        <p>Drop the PDF here</p>
+
         <input
           className={styles.fileDropInput}
           type="file"

@@ -11,6 +11,27 @@
   width: 100%;
   z-index: 10;
   height: 6rem;
+  transition: all 0.2s;
+}
+
+.up {
+  height: 0;
+  padding-top: 1.5rem;
+  overflow: hidden;
+  opacity: 0.5;
+}
+.up::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 47%;
+  background-color: black;
+  opacity: 1;
+  width: 42px;
+  min-height: 30px;
+  transform-origin: 100% 0;
+  transform: rotate(45deg);
+  border: 1px solid rgb(196, 196, 196);
 }
 .header {
   display: flex;
@@ -36,6 +57,12 @@
   }
   .fileName {
     text-align: right;
+  }
+  .up {
+    height: 0;
+  }
+  .up::after {
+    left: 45%;
   }
 }
 .resetLayout {
