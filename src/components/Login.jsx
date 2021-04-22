@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import Loader from 'react-loader-spinner';
+
 import { Redirect } from 'react-router';
 import { useLogin } from '../provider/LoginContextProvider';
 import styles from './Login.module.css';
 import Wallpaper from '../images/wallpaper.jpg';
+import MyLoader from '../shared/MyLoader';
 function Login() {
   const {
     loginState,
@@ -25,15 +26,7 @@ function Login() {
     >
       {/* {loginState.checkingUser && <p>Checking User</p>} */}
       {loginState.user && <Redirect to="/pdf" />}
-      {(loginState.checkingUser || loginState.loading) && (
-        <Loader
-          type="Puff"
-          color="#00BFFF"
-          height={50}
-          width={50}
-          style={{ position: 'fixed' }}
-        />
-      )}
+      {(loginState.checkingUser || loginState.loading) && <MyLoader />}
       <form
         onSubmit={(e) => {
           e.preventDefault();

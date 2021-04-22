@@ -33,11 +33,7 @@
 .options button {
   margin: 1rem;
 }
-.saving {
-  position: absolute;
-  top: 0;
-  right: 0;
-}
+
 .deleteNote {
   position: absolute;
   font-size: 1.5rem;

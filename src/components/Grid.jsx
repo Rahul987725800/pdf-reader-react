@@ -3,7 +3,6 @@ import Dictionary from './Dictionary';
 import PdfReader from './PdfReader';
 import styles from './Grid.module.css';
 import Notes from './Notes';
-import Books from '../components/Books';
 import { percent } from '../utils';
 import GridLayout from 'react-grid-layout';
 import { usePdf } from '../provider/PdfContextProvider';

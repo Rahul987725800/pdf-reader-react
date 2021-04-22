@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import styles from './AllNotes.module.css';
 import { useNotes } from '../provider/NotesContextProvider';
 import { usePdf } from '../provider/PdfContextProvider';
+import MyLoader from '../shared/MyLoader';
 function AllNotes({ history }) {
   const {
     saving,
@@ -36,7 +37,7 @@ function AllNotes({ history }) {
         <Link onClick={() => history.goBack()}>
           <i className="fa fa-arrow-left"></i>&nbsp;&nbsp;Go Back
         </Link>
-        {saving && <p className={styles.saving}>Saving Changes ...</p>}
+        {saving && <MyLoader right />}
       </div>
       <h1 className="headerTop">{localFileName}</h1>
       <div className={styles.options}>
