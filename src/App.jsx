@@ -7,6 +7,7 @@ import { PdfProvider } from './provider/PdfContextProvider';
 import Login from './components/Login';
 import { LoginProvider } from './provider/LoginContextProvider';
 import Books from './components/Books';
+import PrivateRoute from './hoc/PrivateRoute';
 function App() {
   return (
     <LoginProvider>
@@ -15,10 +16,18 @@ function App() {
           <div>
             <Switch>
               <Route path="/" exact component={Login}></Route>
-              <Route path="/pdf" exact component={Grid}></Route>
-              <Route path="/notes" exact component={AllNotes}></Route>
-              <Route path="/notes/:bookName" exact component={AllNotes}></Route>
-              <Route path="/books" exact component={Books} />
+              <PrivateRoute path="/pdf" exact component={Grid}></PrivateRoute>
+              <PrivateRoute
+                path="/notes"
+                exact
+                component={AllNotes}
+              ></PrivateRoute>
+              <PrivateRoute
+                path="/notes/:bookName"
+                exact
+                component={AllNotes}
+              ></PrivateRoute>
+              <PrivateRoute path="/books" exact component={Books} />
             </Switch>
           </div>
         </NotesProvider>
