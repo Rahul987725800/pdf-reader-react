@@ -71,6 +71,10 @@
   width: 100%;
   color: white;
 }
+.fatButton.dummy {
+  background-color: rgb(255, 251, 9);
+  color: black;
+}
 .fatButton.login {
   background-color: rgb(0, 158, 66);
 }

@@ -6,12 +6,8 @@ import styles from './Login.module.css';
 import Wallpaper from '../images/wallpaper.jpg';
 import MyLoader from '../shared/MyLoader';
 function Login() {
-  const {
-    loginState,
-    loginOrSignup,
-    dismissError,
-    authCheckState,
-  } = useLogin();
+  const { loginState, loginOrSignup, dismissError, authCheckState } =
+    useLogin();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   useEffect(() => {
@@ -65,11 +61,23 @@ function Login() {
         </div>
         <div className={styles.buttons}>
           <button
+            onClick={() =>
+              loginOrSignup(
+                { email: '123456@gmail.com', password: '123456' },
+                false
+              )
+            }
+            className={styles.fatButton + ' ' + styles.dummy}
+          >
+            Sign In as Dummy user for testing
+          </button>
+          <button
             onClick={() => loginOrSignup({ email, password }, false)}
             className={styles.fatButton + ' ' + styles.login}
           >
             Login
           </button>
+
           <h3>OR</h3>
           <button
             onClick={() => loginOrSignup({ email, password }, true)}
